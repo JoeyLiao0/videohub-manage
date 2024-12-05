@@ -49,16 +49,16 @@ body,
 
 /* 主题颜色 */
 :root {
-  --background-black1: #121212;
-  --background-black2: #161616;
-  --background-black3: #252525;
-  --background-black4: #303030;
+  --background-black1: #fe9c5f;
+  --background-black2: #ed7c31;
+  --background-black3: #f4be72;
+  --background-black4: #ee9a1c;
 
   --text-white1: rgba(255, 255, 255, 0.87);
-  --text-white2: rgba(255, 255, 255, 0.60);
-  --text-white3: rgba(255, 255, 255, 0.38);
+  --text-white2: rgba(126, 124, 124, 0.6);
+  --text-white3: rgba(237, 232, 232, 0.38);
 
-  --grey1: #1c1c1c;
+  --grey1: #f2eded;
   --grey2: #363636;
   --grey3: #696969;
   --grey4: #778899;
