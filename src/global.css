@@ -1,0 +1,14 @@
+/* global.css */
+/* just for example */
+/* 实际使用这里包含统一的字体样式，颜色样式，供全局使用 */
+body {
+    font-family: 'Arial', sans-serif;
+}
+
+.text-primary {
+    color: #3498db;
+}
+
+.bg-secondary {
+    background-color: #2ecc71;
+}

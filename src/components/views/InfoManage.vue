@@ -39,6 +39,4 @@ import InfoManage from '../items/InfoManage.vue';
     height: calc(100% - 50px);
     background-color: aliceblue;
 }
-
-
 </style>
