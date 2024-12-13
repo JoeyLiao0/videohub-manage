@@ -39,6 +39,8 @@ export default {
     return {
       users: [
         { id: 1, username: '用户1', email: 'example1@email.com', level: '管理员', registrationDate: '2023-05-15T10:00:00Z', isDisabled: false },
+        { id: 1, username: '用户1', email: 'example1@email.com', level: '管理员', registrationDate: '2023-05-15T10:00:00Z', isDisabled: false },
+        { id: 1, username: '用户1', email: 'example1@email.com', level: '管理员', registrationDate: '2023-05-15T10:00:00Z', isDisabled: false },
         { id: 2, username: '用户2', email: 'example2@email.com', level: '普通用户', registrationDate: '2023-05-15T11:30:00Z', isDisabled: false },
         // ... 可以添加更多用户数据
       ]

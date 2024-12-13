@@ -37,7 +37,7 @@
                 </div>
             </el-menu-item>
 
-            <el-menu-item index="/systemSettings">
+            <!-- <el-menu-item index="/systemSettings">
                 <div>
                     <el-icon>
                         <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
@@ -47,7 +47,7 @@
                     </el-icon>
                     <span class="router-text">系统设置</span>
                 </div>
-            </el-menu-item>
+            </el-menu-item> -->
 
             <el-menu-item index="/dataStatistics">
                 <div>
@@ -64,7 +64,7 @@
                 </div>
             </el-menu-item>
 
-            <el-menu-item index="/infoManage">
+            <!-- <el-menu-item index="/infoManage">
                 <div>
                     <el-icon>
                         <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
@@ -77,7 +77,7 @@
                     </el-icon>
                     <span class="router-text">消息通知</span>
                 </div>
-            </el-menu-item>
+            </el-menu-item> -->
 
 
             <div class="avatar">

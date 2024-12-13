@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import DataStatistics from "./components/views/DataStatistics.vue";
+import DataStatisticsView from "./components/views/DataStatisticsView.vue";
 import InfoManage from "./components/views/InfoManage.vue";
 import SystemSettings from "./components/views/SystemSettings.vue";
 import UsersManage from "./components/views/UsersManage.vue";
@@ -9,11 +9,11 @@ import MeInfo from "./components/views/MeInfo.vue";
 import MePassword from "./components/views/MePassword.vue";
 
 const routes = [
-    { path: "/", redirect: "/dataStatistics" },
+    { path: "/", redirect: "/videosManage" },
     {
         path: "/dataStatistics",
         name: "Data",
-        component: DataStatistics
+        component: DataStatisticsView
     },
     {
         path: "/infoManage",

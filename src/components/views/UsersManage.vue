@@ -16,13 +16,16 @@ import UsersManage from '../items/UsersManage.vue';
 </script>
 
 <style scoped>
-.data-statistics{
+.user-manage-container{
     width: 100%;
     height: 100%;
     background-color: var(--background-black2);
+    display: grid;
+    grid-template-rows: 50px 1fr;
 }
 
 .title{
+    grid-row: 1;
     width: 100%;
     height: 50px;
     line-height: 50px;
@@ -34,8 +37,8 @@ import UsersManage from '../items/UsersManage.vue';
 }
 
 .user-manage{
+    grid-row: 2;
     width: 100%;
-    height: calc(100% - 50px);
     background-color: aliceblue;
 }
 

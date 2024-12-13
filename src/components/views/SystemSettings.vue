@@ -21,9 +21,12 @@ import SystemSettings from '../items/SystemSettings.vue';
     width: 100%;
     height: 100%;
     background-color: var(--background-black2);
+    display: grid;
+    grid-template-rows: 50px 1fr;
 }
 
 .title {
+    grid-row: 1;
     width: 100%;
     height: 50px;
     line-height: 50px;
@@ -35,9 +38,9 @@ import SystemSettings from '../items/SystemSettings.vue';
 }
 
 .system-settings{
+    grid-row: 2;
     width: 100%;
-    height: calc(100% - 50px);
-    background-color: white;
+    background-color: rgba(42, 32, 21, 0.827);
 }
 
 </style>

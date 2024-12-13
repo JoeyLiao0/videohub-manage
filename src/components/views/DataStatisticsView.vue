@@ -1,23 +1,22 @@
 <template>
-    <div class="info-manage-container"> 
-        <div class="title"> 
-          <span style="margin-left: 40px;">消息通知</span>  
+    <div class="data-container">
+        <div class="title">
+            <span style="margin-left: 40px;">数据统计</span>
         </div>
-        <div class="info-manage">
-            <InfoManage ></InfoManage>
+        <div class="data-content">
+            <DataStacsticsItem></DataStacsticsItem>
         </div>
     </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import InfoManage from '../items/InfoManage.vue';
-
+import DataStacsticsItem from '../items/DataStacsticsItem.vue';
 
 </script>
 
 <style scoped>
-.info-manage-container{
+.data-container {
     width: 100%;
     height: 100%;
     background-color: var(--background-black2);
@@ -25,7 +24,7 @@ import InfoManage from '../items/InfoManage.vue';
     grid-template-rows: 50px 1fr;
 }
 
-.title{
+.title {
     grid-row: 1;
     width: 100%;
     height: 50px;
@@ -37,9 +36,10 @@ import InfoManage from '../items/InfoManage.vue';
     background-color: var(--background-black2);
 }
 
-.info-manage{
+.data-content{
     grid-row: 2;
     width: 100%;
-    background-color: aliceblue;
+    background-color: rgba(42, 32, 21, 0.827);
 }
+
 </style>
