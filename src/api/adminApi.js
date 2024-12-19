@@ -63,3 +63,15 @@ export const postUsersEmail = (jsonData) => {
 };
 
 ////////////////////////////////////////////////////////////
+
+//获取实时数据
+export const getAdminRealTimeData = () => {
+  return myGet("/admin/real_time_data", {},true);
+};
+
+//获取历史数据
+export const getAdminHistoricalData = (jsonData) => {
+  return myGet("/admin/historical_data", jsonData,true);
+};
+
+////////////////////////////////////////////////////////////

@@ -1,7 +1,7 @@
 <template>
     <div class="data-container">
-        <div class="title">
-            <span style="margin-left: 40px;">数据统计</span>
+        <div class="title"> 
+          <span style="padding-left: 20px;">用户管理</span>  
         </div>
         <div class="data-content">
             <DataStacsticsItem></DataStacsticsItem>
@@ -10,7 +10,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
 import DataStacsticsItem from '../items/DataStacsticsItem.vue';
 
 </script>
@@ -24,17 +23,21 @@ import DataStacsticsItem from '../items/DataStacsticsItem.vue';
     grid-template-rows: 50px 1fr;
 }
 
-.title {
+.title{
     grid-row: 1;
     width: 100%;
     height: 50px;
     line-height: 50px;
     text-align: start;
     font-size: 18px;
-    color: rgb(246, 147, 17);
-    border-bottom: 3px solid gray;
-    background-color: white;
+    /* color:var(--background-black2); */
+    background-color: var(--background-black3);
+    color: aliceblue;
+
+    border-bottom: 1px solid rgb(0, 0, 0);
+    /* background-color: var(--background-black2); */
 }
+
 
 .data-content{
     grid-row: 2;

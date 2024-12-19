@@ -38,16 +38,16 @@
 <script setup>
 import * as echarts from 'echarts';
 import { ref, reactive, onMounted, watch, onUnmounted } from 'vue';
-import axios from 'axios';
 import UsagePercent from './UsagePercent.vue';
 import { ElMessage } from 'element-plus';
-
+import { useStore } from 'vuex';
+import { getAdminRealTimeData, getAdminHistoricalData } from '@/api/adminApi';
 
 const numInlinePerson = ref(0);
 const cpuUsage = ref(0);
 const memoryUsage = ref(0);
 const timeOutId = ref(null);
-
+const store = useStore();
 
 // 定义响应式状态
 const state = reactive({
@@ -57,6 +57,7 @@ const state = reactive({
     previousStartDate: null,
     previousEndDate: null
 });
+
 // 初始化日期
 const initializeDates = () => {
     const today = new Date();
@@ -68,6 +69,20 @@ const initializeDates = () => {
     state.endDate = today.toISOString().split('T')[0];
     state.previousStartDate = state.startDate;
     state.previousEndDate = state.endDate;
+};
+
+// 每十秒获取一次在线人数
+const fetchOnlineData = async () => {
+    try {
+        const response = await getAdminRealTimeData();
+        if (response != null && response.data.code === 200) {
+            numInlinePerson.value = response.data.data.online_num;
+            cpuUsage.value = response.data.data.cpu_percent;
+            memoryUsage.value = (response.data.data.memory_used / response.data.data.memory_total) * 100;
+        }
+    } catch (error) {
+        handleChartError(error);
+    }
 };
 
 // 加载图表
@@ -126,73 +141,66 @@ const initCharts = () => {
 
     // 获取图表数据并更新图表
     const fetchChartData = async () => {
+        const queryData = {
+            beginDate: state.startDate,
+            endDate: state.endDate
+        };
         try {
-            const response = await axios.get("https://apifoxmock.com/m1/5492516-5168386-default/admin/videoData", {
-                params: {
-                    start_date: state.startDate,
-                    end_date: state.endDate
-                }
-            });
-
+            const response = await getAdminHistoricalData(queryData);
             // 构造图表数据
             const res = {
-                line: response.data.line,
-                area: response.data.area,
-                bar: response.data.bar
+                line: response.data.data.line,
+                area: response.data.data.area,
+                bar: response.data.data.bar
             };
             updateCharts(res);
         } catch (error) {
-            console.error("Error fetching chart data:", error);
+            handleChartError(error);
         }
     };
+
+    // 监听日期变化，重新获取图表数据
+    watch([() => state.startDate, () => state.endDate], ([newStart, newEnd]) => {
+        const startDateTime = new Date(newStart);
+        const endDateTime = new Date(newEnd);
+        const currentDate = new Date();
+
+        // 检查是否选择了未来的时间
+        if (startDateTime > currentDate || endDateTime > currentDate) {
+            ElMessage.error("请选择正确的时间范围（不能选择未来的时间）");
+            // 恢复到之前的日期
+            state.startDate = state.previousStartDate;
+            state.endDate = state.previousEndDate;
+            return;
+        }
+        // 检查结束时间是否早于开始时间
+        else if (endDateTime < startDateTime) {
+            ElMessage.error("结束时间必须大于或等于开始时间");
+            // 恢复到之前的日期
+            state.startDate = state.previousStartDate;
+            state.endDate = state.previousEndDate;
+            return;
+        }
+        // 更新日期并重新获取数据
+        state.previousStartDate = state.startDate;
+        state.previousEndDate = state.endDate;
+        fetchChartData();
+    });
 
     // 首次加载时获取数据
     fetchChartData();
 };
-// 每十分钟获取一次在线人数
-const fetchOnlineData = async () => {
-    try {
-        const response = await axios.get("https://apifoxmock.com/m1/5492516-5168386-default/admin/usageInfo");
-        numInlinePerson.value = response.data.numerPerson;
-        cpuUsage.value = response.data.cpuUsage;
-        memoryUsage.value = response.data.memoryUsage;
-    } catch (error) {
-        console.error("Error fetching online users:", error);
+
+// 错误处理函数
+const handleChartError = (error) => {
+    if (error.message === "AUTHENTICATION_FAILED") {
+        console.log("访问令牌失效，请重新登录");
+        store.dispatch('user/openAuth');
+    } else {
+        console.error("图表数据加载失败:", error);
+        ElMessage.error("图表数据加载失败");
     }
 };
-
-// 监听日期变化，重新获取图表数据
-watch([() => state.startDate, () => state.endDate], ([newStart, newEnd]) => {
-    // 将字符串转换为 Date 对象
-    const startDateTime = new Date(newStart);
-    const endDateTime = new Date(newEnd);
-    const currentDate = new Date();
-
-    // 检查是否选择了未来的时间
-    if (startDateTime > currentDate || endDateTime > currentDate) {
-        alert("请选择正确的时间范围（不能选择未来的时间）");
-        // 恢复到之前的日期
-        state.startDate = state.previousStartDate;
-        state.endDate = state.previousEndDate;
-    }
-    // 检查结束时间是否早于开始时间
-    else if (endDateTime < startDateTime) {
-        ElMessage.error("结束时间必须大于或等于开始时间");
-        // 恢复到之前的日期
-        state.startDate = state.previousStartDate;
-        state.endDate = state.previousEndDate;
-    } else {
-        if(state.startDate != state.previousStartDate ||
-            state.endDate != state.previousEndDate
-        ){
-            initCharts(); //重新初始化图表
-        }
-        state.previousStartDate = state.startDate;
-        state.previousEndDate = state.endDate;
-        state.endDate = newEnd;
-        state.startDate = newStart;
-    }
-});
 
 // 组件挂载时初始化
 onMounted(() => {
@@ -208,13 +216,10 @@ onUnmounted(() => {
     // 组件卸载时清除定时器
     clearInterval(timeOutId.value);
 });
-
-
-
 </script>
 
 <style scoped>
-/* 整个页面 */
+
 .data-statistics-container {
     width: 100%;
     height: 100%;
@@ -222,7 +227,6 @@ onUnmounted(() => {
     grid-template-rows: 200px 5px 1fr;
 }
 
-/* 顶部部分 */
 .top-section {
     grid-row: 1;
     display: flex;
@@ -242,7 +246,7 @@ onUnmounted(() => {
     /* 确保文本居中 */
 }
 
-/* 底部图标部分 */
+
 .charts-section {
     grid-row: 3;
     display: grid;

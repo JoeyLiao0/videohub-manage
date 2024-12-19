@@ -33,7 +33,7 @@ body,
   grid-template-rows: 1fr;
   width: 100%;
   height: 100%;
-  background-color: var(--background-black1);
+  /* background-color: var(--background-black1); */
 }
 
 .app-main-content {
