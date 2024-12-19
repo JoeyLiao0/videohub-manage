@@ -3,8 +3,8 @@ import { myGet , myDelete, myPost, myPut } from "./adminClient";
 ////////////////////////////////////////////////////////////
 
 //获取用户个人信息
-export const getAdminUsers = () => {
-  return myGet("/admin/users", {}, true);
+export const getAdminUsers = (jsonData) => {
+  return myGet("/admin/users", jsonData, true);
 };
 
 //注册新用户

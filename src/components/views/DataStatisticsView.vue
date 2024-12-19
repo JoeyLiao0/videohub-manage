@@ -19,7 +19,7 @@ import DataStacsticsItem from '../items/DataStacsticsItem.vue';
 .data-container {
     width: 100%;
     height: 100%;
-    background-color: var(--background-black2);
+    background-color: white;
     display: grid;
     grid-template-rows: 50px 1fr;
 }
@@ -31,15 +31,15 @@ import DataStacsticsItem from '../items/DataStacsticsItem.vue';
     line-height: 50px;
     text-align: start;
     font-size: 18px;
-    color: white;
+    color: rgb(246, 147, 17);
     border-bottom: 3px solid gray;
-    background-color: var(--background-black2);
+    background-color: white;
 }
 
 .data-content{
     grid-row: 2;
     width: 100%;
-    background-color: rgba(42, 32, 21, 0.827);
+    background-color: rgba(252, 252, 252, 0.827);
 }
 
 </style>

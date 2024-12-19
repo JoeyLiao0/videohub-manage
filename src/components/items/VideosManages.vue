@@ -1,92 +1,111 @@
 <template>
-    <div class="videos-table">
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>视频</th>
-                    <th>大小</th>
-                    <th>创建时间</th>
-                    <th>状态</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="video in videos" :key="video.title">
-                    <td>{{ video.title }}</td>
-                    <td>{{ video.size || '---' }}</td>
-                    <td>{{ video.creationTime || '---' }}</td>
-                    <td>{{ video.status }}</td>
-                    <td>
-                        <button @click="handleEdit(video)">编辑</button>
-                        <button :disabled="video.status === '可用'" @click="handleDisable(video)">
-                            {{ video.status === '可用' ? '禁用' : '启用' }}
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <div>
+        <!-- 面包屑导航区域 -->
+
+        <el-breadcrumb separator-class="el-icon-arrow-right">
+            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+            <el-breadcrumb-item>用户列表</el-breadcrumb-item>
+        </el-breadcrumb>
+        <!-- 卡片视图区域 -->
+        <el-card>
+            <el-row :gutter="20">
+                <el-col :span="8">
+                    <!-- 搜索与添加区域 -->
+                    <el-input placeholder="请输入内容">
+                        <template #append>
+                            <el-icon>
+                                <search />
+                            </el-icon>
+                        </template>
+                    </el-input>
+                </el-col>
+                <el-col :span="4">
+                    <el-button type="primary">添加用户</el-button>
+                </el-col>
+            </el-row>
+            <!-- 用户列表区域  -->
+            <el-table :data="userlist" border stripe>
+                <el-table-column type="index"></el-table-column>
+                <el-table-column label="姓名" prop="username"></el-table-column>
+                <el-table-column label="邮箱" prop="email"></el-table-column>
+                <el-table-column label="电话" prop="mobile"></el-table-column>
+                <el-table-column label="角色" prop="role_name"></el-table-column>
+                <el-table-column label="状态" prop="mg_state">
+                    <template v-slot="scope">
+                        <el-switch v-model="scope.row.mg_state" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" width="180px">
+                    <template v-slot="scope">
+                        <!-- 修改按钮 -->
+                        <el-button type="primary" v-model="scope.row.Id" size="mini"><el-icon>
+                                <edit />
+                            </el-icon></el-button>
+                        <!-- 删除按钮 -->
+                        <el-button type="danger" size="mini"><el-icon>
+                                <delete />
+                            </el-icon></el-button>
+                        <!-- 分配角色按钮 -->
+                        <el-tooltip effect="dark" content="分配角色" placement="top" :enterable="false">
+                            <el-button type="warning" size="mini"><el-icon>
+                                    <setting />
+                                </el-icon></el-button>
+                        </el-tooltip>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <!-- 页面区域 -->
+            <el-pagination :current-page="queryInfo.pagenum" :page-sizes="[1, 2, 5, 10]" :page-size="queryInfo.pagesize"
+                layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="handleSizeChange"
+                @current-change="handleCurrentChange">
+            </el-pagination>
+        </el-card>
     </div>
 </template>
 
-<script setup>
-import { ref } from 'vue';
-
-const videos = ref([
-    {
-        title: '[2019-11-25]篮球BLG vs T1',
-        size: '250MB',
-        creationTime: '2019-02-12 12:23:13',
-        status: '可观看'
+<script>
+export default {
+    data() {
+        return {
+            // 获取用户列表的参数对象
+            queryInfo: {
+                query: '', // 查询参数
+                pagenum: 1, // 当前页码
+                pagesize: 2 // 每页显示条数
+            },
+            // 用户列表
+            userlist: [],
+            // 总数据条数
+            total: 0
+        }
     },
-    {
-        title: '[2019-11-25]篮球Bilibili BLG vs T1',
-        size: null,
-        creationTime: null,
-        status: '可用'
+    created() {
+        this.getUserList()
     },
-    {
-        title: '11月2日决赛BLGvsT1',
-        size: null,
-        creationTime: null,
-        status: '可观看'
-    },
-    {
-        title: '【S14决赛】不送就赢？ BLG离冠军最近的1局！',
-        size: null,
-        creationTime: null,
-        status: '可观看'
+    methods: {
+        async getUserList() {
+            // const { data: res } = await this.$http.get('users', {
+            //     params: this.queryInfo
+            // })
+            // if (res.meta.status !== 200) return this.$message.error('获取用户列表失败')
+            // this.userlist = res.data.users
+            // this.total = res.data.total
+            // console.log(res)
+        },
+        // 监听 page size 改变的事件
+        handleSizeChange(newSize) {
+            this.queryInfo.pagesize = newSize
+            this.getUserList()
+        },
+        // 监听 页码值 改变的事件
+        handleCurrentChange(newPage) {
+            this.queryInfo.pagenum = newPage
+            this.getUserList()
+        }
     }
-    // ... 可以添加更多视频数据
-]);
 
-function handleEdit(video) {
-    alert('编辑功能未实现: ' + video.title);
-    // 这里可以添加编辑功能的实现代码
-}
-
-function handleDisable(video) {
-    alert('禁用功能未实现: ' + video.title);
-    // 这里可以添加禁用功能的实现代码，例如更新数据库中的状态
 }
 </script>
 
-<style scoped>
-.videos-table {
-    margin: 20px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-th,
-td {
-    padding: 8px;
-    text-align: left;
-}
-
-button {
-    margin-right: 5px;
-}
-</style>
+<style lang="less" scoped></style>

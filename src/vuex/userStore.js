@@ -8,7 +8,6 @@ const userStore = {
       registerTime: null,
       name: null,
       email: null,
-      text: "个性签名可以写在这里",
       avatar: null,
     };
   },
