@@ -1,85 +1,127 @@
 <template>
-    <div class="user-table">
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>编号</th>
-                    <th>用户名</th>
-                    <th>用户邮箱</th>
-                    <th>用户级别</th>
-                    <th>注册时间</th>
-                    <th>是否禁用</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(user, index) in users" :key="user.id">
-                    <td>{{ index + 1 }}</td>
-                    <td>{{ user.username }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.level }}</td>
-                    <td>{{ formatDate(user.registrationDate) }}</td>
-                    <td>{{ user.isDisabled ? '是' : '否' }}</td>
-                    <td>
-                        <button @click="editUser(user)">编辑</button>
-                        <button @click="toggleDisabled(user)">
-                            {{ user.isDisabled ? '启用' : '禁用' }}
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+  <div class="user-table">
+    <table border="1">
+      <thead>
+        <tr>
+          <th>用户编号</th>
+          <th>用户名</th>
+          <th>用户邮箱</th>
+          <th>用户级别</th>
+          <th>注册时间</th>
+          <th>用户状态</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="user in users" :key="user.id">
+          <td>{{ user.id }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>普通用户</td>
+          <td>{{ formatDate(user.time) }}</td>
+          <td>{{ formatStatus(user.status) }}</td>
+          <td v-if="user.status == 0 || user.status == 1">
+            <button @click="toggleDisabled(user.id,user.status)">
+              {{ user.status == 1 ? '启用' : '封禁' }}
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
 </template>
 
-<script>
-export default {
-  name: 'UserTable',
-  data() {
-    return {
-      users: [
-        { id: 1, username: '用户1', email: 'example1@email.com', level: '管理员', registrationDate: '2023-05-15T10:00:00Z', isDisabled: false },
-        { id: 1, username: '用户1', email: 'example1@email.com', level: '管理员', registrationDate: '2023-05-15T10:00:00Z', isDisabled: false },
-        { id: 1, username: '用户1', email: 'example1@email.com', level: '管理员', registrationDate: '2023-05-15T10:00:00Z', isDisabled: false },
-        { id: 2, username: '用户2', email: 'example2@email.com', level: '普通用户', registrationDate: '2023-05-15T11:30:00Z', isDisabled: false },
-        // ... 可以添加更多用户数据
-      ]
-    };
-  },
-  methods: {
-    editUser(user) {
-      // 这里可以添加编辑用户的逻辑，比如打开一个模态框或跳转到编辑页面
-      alert(`编辑用户: ${user.username}`);
-    },
-    toggleDisabled(user) {
-      user.isDisabled = !user.isDisabled;
-      // 这里可以添加保存更改的逻辑，比如发送到服务器
-    },
-    formatDate(dateString) {
-      // 格式化日期字符串为本地时间格式
-      const date = new Date(dateString);
-      return date.toLocaleString();
+<script setup>
+import { ref,onMounted} from 'vue';
+import { getAdminUsers } from '@/api/adminApi';
+import { useStore } from 'vuex'; 
+
+const users = ref([]);
+const store = useStore();
+
+// 当组件挂载时，获取用户数据
+onMounted(async () => {
+  try {
+    const response = await getAdminUsers();
+    if (response != null && response.data.code === 200) {
+      users.value = response.data.data.users;
+      console.log(response.data.data.users);
+    }
+  } catch (error) {
+    if (error.message === "AUTHENTICATION_FAILED") {
+      console.log("访问令牌失效，请重新登录");
+      store.dispatch('user/openAuth');
     }
   }
-};
+});
+
+function formatDate(time) {
+  const timestamp = new Date(time).getTime();
+  return new Date(timestamp).toLocaleString('zh-CN', {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric'
+  });
+}
+
+function formatStatus(status) {
+  const num = status;
+  if (num == 0) {
+    return '正常';
+  } else if (num == 1) {
+    return '封禁';
+  } else {
+    return '注销';
+  }
+}
+
 </script>
 
 <style scoped>
-    .user-table {
-        margin: 20px;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    th, td {
-        padding: 8px;
-        text-align: left;
-    }
-
-    button {
-        margin-right: 5px;
-    }
+.user-table {
+  margin: 20px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 8px;
+  text-align: left;
+}
+button {
+  margin-right: 5px;
+}
+.modal {
+  display: block;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4);
+}
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
 </style>

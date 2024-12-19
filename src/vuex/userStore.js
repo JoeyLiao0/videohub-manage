@@ -1,39 +1,44 @@
-import { createStore } from 'vuex';
 // 定义模块对象
 const userStore = {
   namespaced: true, // 启用命名空间
   state() {
     return {
-      showAuth: true,
-      status:"正常",
-      registerTime:"2024-10-16",
-      name:"username",
-      phone:"phone",
-      email:"email",
-      text:"text",
+      showAuth: false,
+      status: null,
+      registerTime: null,
+      name: null,
+      email: null,
+      text: "个性签名可以写在这里",
+      avatar: null,
     };
   },
   mutations: {
-    // 定义你的 mutations
-    openAuth(state){
+    OPEN_AUTH(state) {
       state.showAuth = true;
     },
-    closeAuth(state){
+    CLOSE_AUTH(state) {
       state.showAuth = false;
+    },
+    SET_ME_INFO(state, payload) {
+      state.status = payload.status;
+      state.registerTime = payload.time;
+      state.email = payload.email;
+      state.avatar = payload.avatar;
+      state.name = payload.name;
+      state.avatar = payload.avatar;
     }
   },
   actions: {
-    // 定义你的 actions
-    openAuth({commit}){
-      commit('openAuth');
+    openAuth({ commit }) {
+      commit("OPEN_AUTH");
     },
-    closeAuth({commit}){
-      commit('closeAuth');
-    }
+    closeAuth({ commit }) {
+      commit("CLOSE_AUTH");
+    },
+    setMeInfo({commit},data){
+      commit("SET_ME_INFO", data);
+    },
   },
-  getters: {
-    // 定义你的 getters
-  }
 };
 
 // 默认导出模块对象

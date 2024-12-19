@@ -74,25 +74,25 @@ const initCharts = () => {
   const defaultLineOption = {
     title: { text: '折线图' },
     tooltip: { trigger: 'axis' },
-    xAxis: { type: 'category', data: [1,2,3,4,5,6] },
-    yAxis: { type: 'value' },
+    xAxis: { type: 'category', data: ['2025-03-01','2025-03-02','2025-03-03','2025-03-04','2025-03-05','2025-03-06'] },
+    yAxis: { type: 'value' }, 
     series: [{ name: '数据', type: 'line', data: [1,2,3,4,5,6] }]
   };
 
   const defaultAreaOption = {
     title: { text: '面积图' },
     tooltip: { trigger: 'axis' },
-    xAxis: { type: 'category', data: [1,2,3,4,5,6] },
+    xAxis: { type: 'category', data: ['2025-03-01','2025-03-02','2025-03-03','2025-03-04','2025-03-05','2025-03-06','2025-03-01','2025-03-02','2025-03-03','2025-03-04','2025-03-05','2025-03-06'] },
     yAxis: { type: 'value' },
-    series: [{ name: '数据', type: 'line', areaStyle: {} , data: [3,2,1,5,4,6] }]
+    series: [{ name: '数据', type: 'line', areaStyle: {} , data: [3,2,1,5,4,6,3,2,1,5,4,6] }]
   };
 
   const defaultBarOption = {
     title: { text: '柱状图' },
     tooltip: { trigger: 'axis' },
-    xAxis: { type: 'category', data: [1,2,3,4,5,6] },
+    xAxis: { type: 'category', data: ['2025-03-01','2025-03-02','2025-03-03','2025-03-04','2025-03-05','2025-03-06','2025-03-01','2025-03-02','2025-03-03','2025-03-04','2025-03-05','2025-03-06'] },
     yAxis: { type: 'value' },
-    series: [{ name: '数据', type: 'bar', data: [6,5,4,3,2,1] }]
+    series: [{ name: '数据', type: 'bar', data: [6,5,4,3,2,1,3,2,1,5,4,6] }]
   };
 
   // 设置初始选项
@@ -100,7 +100,8 @@ const initCharts = () => {
   areaChart.setOption(defaultAreaOption);
   barChart.setOption(defaultBarOption);
 
-  // 更新图表的方法
+  
+  //更新图表的方法
   const updateCharts = (data) => {
     if (data) {
       const lineData = data.line || [];
@@ -130,46 +131,47 @@ const initCharts = () => {
     }
   };
 
-  // 获取图表数据并更新图表
-  const fetchChartData = async () => {
-    try {
-      const response = await axios.get(chartDataApi, {
-        params: {
-          start_date: state.startDate,
-          end_date: state.endDate
-        }
-      });
 
-      // 构造图表数据
-      const res = {
-        line: response.data.line || [1, 2, 3, 4, 5, 6], 
-        area: response.data.area || [1, 2, 3, 4, 5, 6], 
-        bar: response.data.bar || [1, 2, 3, 4, 5, 6]
-      };
 
-      state.lineChartData = res.line;
-      state.areaChartData = res.area;
-      state.barChartData = res.bar;
-      updateCharts(res);
-    } catch (error) {
-      console.error("Error fetching chart data:", error);
-    }
-  };
-
-  // 首次加载时获取数据
+  //首次加载时获取数据
   fetchChartData();
-};
+};  
+//获取图表数据并更新图表
+  const fetchChartData = async () => {
+    // try {
+    //   const response = await axios.get(chartDataApi, {
+    //     params: {
+    //       start_date: state.startDate,
+    //       end_date: state.endDate
+    //     }
+    //   });
+
+    //   // 构造图表数据
+    //   const res = {
+    //     line: response.data.line || [1, 2, 3, 4, 5, 6], 
+    //     area: response.data.area || [1, 2, 3, 4, 5, 6], 
+    //     bar: response.data.bar || [1, 2, 3, 4, 5, 6]
+    //   };
+
+    //   state.lineChartData = res.line;
+    //   state.areaChartData = res.area;
+    //   state.barChartData = res.bar;
+    //   updateCharts(res);
+    // } catch (error) {
+    //   console.error("Error fetching chart data:", error);
+    // }
+  };
 // 每十分钟获取一次在线人数
 const fetchOnlineUsers = async () => {
-    try {
-        const response = await axios.get(onlineUsersApi);
-        state.onlineUsers = response.data.online_users;
-    } catch (error) {
-        console.error("Error fetching online users:", error);
-    }
+    // try {
+    //     const response = await axios.get(onlineUsersApi);
+    //     state.onlineUsers = response.data.online_users;
+    // } catch (error) {
+    //     console.error("Error fetching online users:", error);
+    // }
 };
 
-// 组件挂载时初始化
+//组件挂载时初始化
 onMounted(() => {
     initCharts();
     // 设置定时器每十分钟获取一次在线人数

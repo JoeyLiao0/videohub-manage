@@ -5,10 +5,11 @@
       <div class="avatar">
         <el-avatar :size="80" :src="avatarSrc" style="border: 1px solid black">
         </el-avatar>
-        <span class="set">设置</span>
+        <!-- <input type="file" @change="handleFileChange" style="display: none" ref="fileInput">
+        <span class="set" @click="triggerFileInput">设置</span> -->
       </div>
-      <span class="status">状态:{{ userStatus }}</span>
-      <span class="time">注册时间:{{ userRegisterTime }}</span>
+      <span class="status">状态:{{ formatStatus(userStatus) }}</span>
+      <span class="time">注册时间:{{ formatDate(userRegisterTime) }}</span>
     </div>
 
     <div class="content-container">
@@ -43,6 +44,27 @@ const activeIdx = computed(() => router.currentRoute.value.path);
 const store = useStore();
 const userStatus = computed(() => store.state.user.status);
 const userRegisterTime = computed(() => store.state.user.registerTime);
+
+
+function formatDate(time) {
+  const timestamp = new Date(time).getTime();
+  return new Date(timestamp).toLocaleString('zh-CN', {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric'
+  });
+}
+
+function formatStatus(status) {
+  const num = status;
+  if (num == 0) {
+    return '正常';
+  } else if (num == 1) {
+    return '封禁';
+  } else {
+    return '注销';
+  }
+}
 
 </script>
 
@@ -83,10 +105,15 @@ const userRegisterTime = computed(() => store.state.user.registerTime);
   position: absolute;
   font-size: 20px;
   ;
-  color: var(--background-black1);
+  color: transparent;
   left: 20px;
   top: 25px;
   z-index: 5000;
+}
+
+.avatar:hover .set {
+  color: var(--background-black1); /* 悬停时显示的文字颜色 */
+  cursor: pointer;
 }
 
 .content-container {

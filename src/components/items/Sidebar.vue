@@ -83,7 +83,7 @@
             <div class="avatar">
                 <el-avatar @click="handleAvatarClick" :size="80" :src="avatarSrc" style="border: 1px solid black">
                 </el-avatar>
-                <div class="status-dot"></div>
+                <!-- <div class="status-dot"></div> -->
             </div>
         </div>
     </el-menu>

@@ -1,7 +1,7 @@
 <template>
     <div class="user-manage-container"> 
         <div class="title"> 
-          <span style="margin-left: 40px;">用户管理</span>  
+          <span style="margin-left: 20px;">用户管理</span>  
         </div>
         <div class="user-manage">
             <UsersManage></UsersManage>
@@ -19,7 +19,7 @@ import UsersManage from '../items/UsersManage.vue';
 .user-manage-container{
     width: 100%;
     height: 100%;
-    background-color: var(--background-black2);
+    /* background-color: var(--background-black2); */
     display: grid;
     grid-template-rows: 50px 1fr;
 }
@@ -31,15 +31,15 @@ import UsersManage from '../items/UsersManage.vue';
     line-height: 50px;
     text-align: start;
     font-size: 18px;
-    color: white;
-    border-bottom: 3px solid gray;
-    background-color: var(--background-black2);
+    color:var(--background-black2);
+    border-bottom: 1px solid gray;
+    /* background-color: var(--background-black2); */
 }
 
 .user-manage{
     grid-row: 2;
     width: 100%;
-    background-color: aliceblue;
+    /* background-color: var(--background-black2); */
 }
 
 </style>
