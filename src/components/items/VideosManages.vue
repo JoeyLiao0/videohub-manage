@@ -85,13 +85,13 @@ export default {
     },
     methods: {
         async getUserList() {
-            const { data: res } = await this.$http.get('users', {
-                params: this.queryInfo
-            })
-            if (res.meta.status !== 200) return this.$message.error('获取用户列表失败')
-            this.userlist = res.data.users
-            this.total = res.data.total
-            console.log(res)
+            // const { data: res } = await this.$http.get('users', {
+            //     params: this.queryInfo
+            // })
+            // if (res.meta.status !== 200) return this.$message.error('获取用户列表失败')
+            // this.userlist = res.data.users
+            // this.total = res.data.total
+            // console.log(res)
         },
         // 监听 page size 改变的事件
         handleSizeChange(newSize) {

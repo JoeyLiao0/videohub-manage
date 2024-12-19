@@ -1,9 +1,9 @@
 <!-- src/components/Auth.vue -->
 <template>
   <div class="auth" v-show="showAuth">
-    <div class="layer"></div>
+    <!-- <div class="layer"></div> -->
     <div class="auth-content">
-      <button class="exit" @click="closeAuth">退出</button>
+      <!-- <button class="exit" @click="closeAuth">退出</button> -->
       <div class="content">
         <div class="login-grid-container" v-if="showLogin">
           <span class="title">登录界面</span>
@@ -37,18 +37,6 @@ const login_username = ref("");
 const login_password = ref("");
 
 const showAuth = computed(() => store.state.user.showAuth);
-function closeAuth() {
-  setTimeout(() => {
-    store.dispatch('user/closeAuth');
-  }, 100);
-}
-function registerPage() {
-  showLogin.value = false;
-}
-
-function loginPage() {
-  showLogin.value = true;
-}
 </script>
 
 <style scoped>
@@ -59,7 +47,7 @@ function loginPage() {
   min-width: 1200px;
   z-index: 1998;
   /* 确保蒙版在最上层 */
-  background-color: var(--text-white3);
+  background-color: var(--background-black4);
 }
 
 .auth-content {

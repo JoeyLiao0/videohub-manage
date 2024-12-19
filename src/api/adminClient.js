@@ -1,14 +1,14 @@
 import axios from "axios";
 import { getAccessToken, getRefreshToken, setAccessToken } from "./auth";
-import store from "@/vuex/root";
+
 
 // 创建一个Axios实例
-const userClient = axios.create({
-  baseURL: "https://apifoxmock.com/m1/5501967-5178103-default/admin",
-  // baseURL: "http://localhost:8081",
+const adminClient = axios.create({
+  baseURL: "http://127.0.0.1:4523/m1/3020684-0-default",
+  // baseURL: "http://192.168.39.3:8082",
 });
 
-const postUsersAccessToken = () => {
+const postAdminAccessToken = () => {
   return myPost(
     "/admin/access_token",
     { refresh_token: getRefreshToken() },
@@ -16,7 +16,7 @@ const postUsersAccessToken = () => {
   );
 };
 
-userClient.interceptors.response.use(
+adminClient.interceptors.response.use(
   (response) => {
     if (response.data.code === 401) {
       //刷新访问令牌后重试一次
@@ -28,12 +28,12 @@ userClient.interceptors.response.use(
 
 // 处理Token刷新逻辑
 async function handleTokenRefresh(config) {
-  const response = await postUsersAccessToken();
+  const response = await postAdminAccessToken();
   if (response != null && response.data.code === 200) {
     const access_token = response.data.data.access_token;
     setAccessToken(access_token);
     config.headers.Authorization = `${access_token}`;
-    return userClient(config);
+    return adminClient(config);
   } else {
     //这里刷新令牌的API对应的code为400/其他,说明刷新令牌也失效了，跳出循环了，不会一直循环重试，这个错误需要在vue组件调用api时捕获
     throw new Error("AUTHENTICATION_FAILED");
@@ -44,13 +44,13 @@ async function handleTokenRefresh(config) {
 const setHeaderToken = (isNeedToken) => {
   const accessToken = isNeedToken ? getAccessToken() : null;
   if (isNeedToken) {
-    userClient.defaults.headers.common.Authorization = `${accessToken}`;
+    adminClient.defaults.headers.common.Authorization = `${accessToken}`;
   }
 };
 
 export const myGet = (url, params = {}, isNeedToken = false) => {
   setHeaderToken(isNeedToken);
-  return userClient({
+  return adminClient({
     method: "get",
     url,
     params,
@@ -59,7 +59,7 @@ export const myGet = (url, params = {}, isNeedToken = false) => {
 
 export const myPost = (url, params = {}, isNeedToken = false) => {
   setHeaderToken(isNeedToken);
-  return userClient({
+  return adminClient({
     method: "post",
     url,
     data: params,
@@ -69,7 +69,7 @@ export const myPost = (url, params = {}, isNeedToken = false) => {
 // 封装delete请求
 export const myDelete = (url, params = {}, isNeedToken = false) => {
   setHeaderToken(isNeedToken);
-  return userClient({
+  return adminClient({
     method: "delete",
     url,
     params,
@@ -79,7 +79,7 @@ export const myDelete = (url, params = {}, isNeedToken = false) => {
 // 封装put请求
 export const myPut = (url, params = {}, isNeedToken = false) => {
   setHeaderToken(isNeedToken);
-  return userClient({
+  return adminClient({
     method: "put",
     url,
     data: params,
