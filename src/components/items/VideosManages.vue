@@ -103,9 +103,9 @@ const searchData = ref(
 
 const store = useStore();
 const videoList = ref([]);  // 用户数据
-const selectStatus = ref(-1);
+const selectStatus = ref(-1); // 不同状态的视频列表
 // 分页机制
-const total_videos = ref('-1');
+const total_videos = ref(0);
 const queryInfo = ref({
     page: 1,
     limit: 4,
@@ -113,7 +113,7 @@ const queryInfo = ref({
     like: '',
 });
 
-// 定义一个响应式对象来管理弹窗和当前视频信息
+// 管理弹窗和当前视频信息
 const videoDialogState = ref({
     dialogVisible: false,
     currentVideo: null,
@@ -179,12 +179,12 @@ async function handleDelete(video){
 // 视频状态改变
 async function handleStatusChange(video) {
     console.log("video:" + video.status);
-    const userData = {
+    const videoData = {
         vid: video.id,
         new_status: video.status
     };
     try {
-        const response = await putAdminVideos(userData);
+        const response = await putAdminVideos(videoData);
         if (response != null && response.data.code === 200) {
             console.log("用户状态修改成功");
         } else {
@@ -201,17 +201,17 @@ async function handleStatusChange(video) {
 // 获取视频列表
 async function getVideoList() {
     try {
-        const response = await axios.get('https://apifoxmock.com/m1/5658337-5338838-default/admin/videos', {
-            params: queryInfo.value
-        });
-        // const response = await getAdminVideos(queryInfo.value);
-
+        // const response = await axios.get('https://apifoxmock.com/m1/5658337-5338838-default/admin/videos', {
+        //     params: queryInfo.value
+        // });
+        const response = await getAdminVideos(queryInfo.value);
         if (response != null && response.data.code === 200) {
-            videoList.value = response.data.data.videos.map(video => ({
-                ...video,
-                video_path: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
-                cover_path: 'https://peach.blender.org/wp-content/uploads/bbb-splash.png',
-            }));
+            // videoList.value = response.data.data.videos.map(video => ({
+            //     ...video,
+            //     video_path: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
+            //     cover_path: 'https://peach.blender.org/wp-content/uploads/bbb-splash.png',
+            // }));
+            videoList.value = response.data.data.videos;
             total_videos.value = videoList.value.length;
         }
     } catch (error) {
