@@ -31,8 +31,11 @@ import VideosManages from '../items/VideosManages.vue';
     line-height: 50px;
     text-align: start;
     font-size: 18px;
-    color:var(--background-black2);
-    border-bottom: 1px solid gray;
+    /* color:var(--background-black2); */
+    background-color: var(--background-black3);
+    color: aliceblue;
+
+    border-bottom: 1px solid rgb(0, 0, 0);
     /* background-color: var(--background-black2); */
 }
 
@@ -40,6 +43,7 @@ import VideosManages from '../items/VideosManages.vue';
     grid-row: 2;
     width: 100%;
     /* background-color: aliceblue; */
+    background-color: rgba(252, 252, 252, 0.827);
 }
 
 </style>

@@ -67,7 +67,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { Search } from '@element-plus/icons-vue';
-import { getAdminUsers,putAdminUsers } from '@/api/adminApi';
+import { getAdminUsers, putAdminUsers } from '@/api/adminApi';
 import { useStore } from 'vuex';
 const searchData = ref(
   {
@@ -116,18 +116,18 @@ async function handleStateChange(user, newState) {
   console.log("user:" + user);
   console.log("newState:" + newState);
   user.isEnable = newState;
-  const userData  = {
-    uid : user.id,
-    new_status : newState
+  const userData = {
+    uid: user.id,
+    new_status: newState
   }
   try {
     const response = await putAdminUsers(userData);
     if (response != null && response.data.code === 200) {
       console.log("用户状态修改成功");
-    }else{
+    } else {
       console.log("用户状态修改失败");
     }
-  }catch(error){
+  } catch (error) {
     if (error.message === "AUTHENTICATION_FAILED") {
       console.log("访问令牌失效，请重新登录");
       store.dispatch('user/openAuth');
@@ -139,16 +139,16 @@ async function handleStateChange(user, newState) {
 async function getUserList() {
   try {
     const response = await getAdminUsers(queryInfo.value);
-    console.log(response);
+
     if (response != null && response.data.code === 200) {
       userList.value = response.data.data.users;
       total_pages.value = response.data.data.pages.total_pages;
-          // 更新用户列表并为每个用户添加 isEnable, visible 属性
+      // 更新用户列表并为每个用户添加 isEnable, visible 属性
       userList.value = response.data.data.users.map(user => ({
         ...user,
         isEnable: user.status === 0, // 假设 0 表示正常状态，其他值表示非启用状态
         visible: user.status < 2, // 假设 0 和 1 表示可见，其他值表示不可见
-    }));
+      }));
     }
   } catch (error) {
     if (error.message === "AUTHENTICATION_FAILED") {

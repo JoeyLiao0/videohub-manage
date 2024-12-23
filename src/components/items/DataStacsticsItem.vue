@@ -75,10 +75,12 @@ const initializeDates = () => {
 const fetchOnlineData = async () => {
     try {
         const response = await getAdminRealTimeData();
+        console.log(response.data);
         if (response != null && response.data.code === 200) {
             numInlinePerson.value = response.data.data.online_num;
             cpuUsage.value = response.data.data.cpu_percent;
-            memoryUsage.value = (response.data.data.memory_used / response.data.data.memory_total) * 100;
+            memoryUsage.value = (response.data.data.memory_used / response.data.data.memory_total * 100).toFixed(2);
+            
         }
     } catch (error) {
         handleChartError(error);
