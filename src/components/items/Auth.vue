@@ -18,7 +18,7 @@
               d="M6 22q-.825 0-1.412-.587T4 20V10q0-.825.588-1.412T6 8h1V6q0-2.075 1.463-3.537T12 1t3.538 1.463T17 6v2h1q.825 0 1.413.588T20 10v10q0 .825-.587 1.413T18 22zm6-5q.825 0 1.413-.587T14 15t-.587-1.412T12 13t-1.412.588T10 15t.588 1.413T12 17M9 8h6V6q0-1.25-.875-2.125T12 3t-2.125.875T9 6z" />
           </svg>
           <el-input class="password-input" v-model="login_password" type="password" placeholder="密码"></el-input>
-          <el-button class="login-button">登录</el-button>
+          <el-button class="login-button" @click="login">登录</el-button>
         </div>
       </div>
     </div>
@@ -26,8 +26,24 @@
 </template>
 
 <script setup>
+// import { useStore } from 'vuex';
+// import { computed, ref } from 'vue';
+// import CryptoJS from 'crypto-js';
+// import * as validator from 'validator';
+import {getAdmin,postAdminToken} from '@/api/adminApi';
+// import { setAccessToken, setRefreshToken } from "@/api/auth";
+
+
+
+
 import { useStore } from 'vuex';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import { useRouter } from "vue-router";
+import { setAccessToken, setRefreshToken } from "@/api/auth";
+import CryptoJS from 'crypto-js';
+import * as validator from 'validator';
+
+const router = useRouter();
 
 const showLogin = ref(true);
 const messageLogin = ref("请先登录才能进入系统");
@@ -37,6 +53,51 @@ const login_username = ref("");
 const login_password = ref("");
 
 const showAuth = computed(() => store.state.user.showAuth);
+
+
+async function login() {
+  if (!validator.isEmail(login_username.value)) {
+    messageLogin.value = '邮箱格式非法';
+  } else if (login_password.value === "" || login_password.value.trim() === "") {
+    messageLogin.value = '密码不能为空';
+  } else if (login_password.value.length < 6 || login_password.value.length > 18) {
+    messageLogin.value = '密码长度应在6位到18位之间';
+  } else {
+    const userData = {
+      email: login_username.value,
+      password: CryptoJS.SHA256(login_password.value).toString(),//这里要加密一遍
+    };
+    const response = await postAdminToken(userData);
+    if (response.data.code == 200) {
+      console.log(CryptoJS.SHA256(login_password.value).toString());
+      messageLogin.value = "登录成功！";
+      setAccessToken(response.data.data.access_token);
+      setRefreshToken(response.data.data.refresh_token);
+      router.push("/home/origin");
+      setTimeout(() => {
+        store.dispatch('user/closeAuth');
+      }, 1000);
+
+      console.log("登录成功");
+
+      try {
+        const response = await getAdmin();
+        if (response != null && response.data.code === 200) {
+          store.dispatch('user/setMeInfo', response.data.data.user);
+        }
+      } catch (error) {
+        if (error.message === "AUTHENTICATION_FAILED") {
+          console.log("访问令牌失效，请重新登录");
+          store.dispatch('user/openAuth');
+        }
+      }
+    } else {
+      console.log(response.data.error);
+    }
+  }
+}
+
+
 </script>
 
 <style scoped>

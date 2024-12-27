@@ -94,12 +94,12 @@ const queryInfo = ref({
 
 // 搜索
 function handleSearch() {
-  if (searchData.value.id != '') {
+  // if (searchData.value.id != '') {
     queryInfo.value.id = searchData.value.id;
-  }
-  if (searchData.value.name != '') {
+  // }
+  // if (searchData.value.name != '') {
     queryInfo.value.like = searchData.value.name;
-  }
+  // }
   getUserList();
 }
 
@@ -118,7 +118,7 @@ async function handleStateChange(user, newState) {
   user.isEnable = newState;
   const userData  = {
     uid : user.id,
-    new_status : newState
+    new_status : newState ? 0 : 1
   }
   try {
     const response = await putAdminUsers(userData);

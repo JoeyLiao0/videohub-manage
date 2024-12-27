@@ -77,8 +77,8 @@ const fetchOnlineData = async () => {
         const response = await getAdminRealTimeData();
         if (response != null && response.data.code === 200) {
             numInlinePerson.value = response.data.data.online_num;
-            cpuUsage.value = response.data.data.cpu_percent;
-            memoryUsage.value = (response.data.data.memory_used / response.data.data.memory_total) * 100;
+            cpuUsage.value = Math.round(response.data.data.cpu_percent);
+            memoryUsage.value = Math.round((response.data.data.memory_used / response.data.data.memory_total) * 100);
         }
     } catch (error) {
         handleChartError(error);
@@ -142,8 +142,8 @@ const initCharts = () => {
     // 获取图表数据并更新图表
     const fetchChartData = async () => {
         const queryData = {
-            beginDate: state.startDate,
-            endDate: state.endDate
+            begin_date: state.startDate,
+            end_date: state.endDate
         };
         try {
             const response = await getAdminHistoricalData(queryData);

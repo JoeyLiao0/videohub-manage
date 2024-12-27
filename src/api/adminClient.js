@@ -4,8 +4,9 @@ import { getAccessToken, getRefreshToken, setAccessToken } from "./auth";
 
 // 创建一个Axios实例
 const adminClient = axios.create({
-  baseURL: "http://127.0.0.1:4523/m1/3020684-0-default",
+  // baseURL: "http://127.0.0.1:4523/m1/3020684-0-default",
   // baseURL: "http://192.168.39.3:8082",
+  baseURL: "http://192.168.176.3:8082",
 });
 
 const postAdminAccessToken = () => {
