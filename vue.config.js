@@ -9,5 +9,10 @@ module.exports = defineConfig({
         '@': require('path').resolve(__dirname, 'src/'),
       }
     }
-  }
+  },
+  devServer: {
+    client: {
+      overlay: false
+    },
+  },
 })

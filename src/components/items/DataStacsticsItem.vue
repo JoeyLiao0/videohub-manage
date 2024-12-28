@@ -75,6 +75,7 @@ const initializeDates = () => {
 const fetchOnlineData = async () => {
     try {
         const response = await getAdminRealTimeData();
+        console.log(response.data);
         if (response != null && response.data.code === 200) {
             numInlinePerson.value = response.data.data.online_num;
             cpuUsage.value = Math.round(response.data.data.cpu_percent);

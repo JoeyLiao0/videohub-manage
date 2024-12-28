@@ -57,7 +57,7 @@
 
       <div class="user-table-pages-button">
         <el-pagination v-model:current-page="queryInfo.page" v-model:page-size="queryInfo.limit" :page-sizes="[10]"
-          background="true" layout="total, sizes, prev, pager, next, jumper" :total="total_pages"
+          background="true" layout="total, sizes, prev, pager, next, jumper" :total="total_pages*10"
           @current-change="handleCurrentChange" />
       </div>
     </div>
@@ -67,7 +67,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { Search } from '@element-plus/icons-vue';
-import { getAdminUsers,putAdminUsers } from '@/api/adminApi';
+import { getAdminUsers, putAdminUsers } from '@/api/adminApi';
 import { useStore } from 'vuex';
 const searchData = ref(
   {
@@ -81,7 +81,7 @@ const store = useStore();
 const userList = ref([]);  // 用户数据
 
 // 分页机制
-const total_pages = ref(1);
+const total_pages = ref(2);
 const queryInfo = ref({
   page: 1,
   limit: 10,
@@ -124,10 +124,10 @@ async function handleStateChange(user, newState) {
     const response = await putAdminUsers(userData);
     if (response != null && response.data.code === 200) {
       console.log("用户状态修改成功");
-    }else{
+    } else {
       console.log("用户状态修改失败");
     }
-  }catch(error){
+  } catch (error) {
     if (error.message === "AUTHENTICATION_FAILED") {
       console.log("访问令牌失效，请重新登录");
       store.dispatch('user/openAuth');
@@ -139,16 +139,16 @@ async function handleStateChange(user, newState) {
 async function getUserList() {
   try {
     const response = await getAdminUsers(queryInfo.value);
-    console.log(response);
+
     if (response != null && response.data.code === 200) {
       userList.value = response.data.data.users;
       total_pages.value = response.data.data.pages.total_pages;
-          // 更新用户列表并为每个用户添加 isEnable, visible 属性
+      // 更新用户列表并为每个用户添加 isEnable, visible 属性
       userList.value = response.data.data.users.map(user => ({
         ...user,
         isEnable: user.status === 0, // 假设 0 表示正常状态，其他值表示非启用状态
         visible: user.status < 2, // 假设 0 和 1 表示可见，其他值表示不可见
-    }));
+      }));
     }
   } catch (error) {
     if (error.message === "AUTHENTICATION_FAILED") {
@@ -191,7 +191,9 @@ function handleSortChange({ prop, order }) {
 
 // 分页页码改变
 const handleCurrentChange = (val) => {
-  if (total_pages >= val && val >= 1) {
+  console.log(total_pages);
+  console.log(val);
+  if (total_pages.value >= val && val >= 1) {
     queryInfo.value.page = val;
     getUserList();
   }
