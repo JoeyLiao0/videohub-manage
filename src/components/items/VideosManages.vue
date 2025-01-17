@@ -11,7 +11,7 @@
             </div>
             <!-- 搜索按钮 -->
             <div class="search-button">
-                <el-button :icon="Search" circle @click="handleSearch" />
+                <el-button :icon="Search" circle @click="handleSearch" >搜索</el-button>
             </div>
         </div>
         <!-- 视频表格 -->
@@ -67,7 +67,7 @@
 
                     <el-table-column label="删除" width="80">
                         <template v-slot="scope">
-                            <el-button type="danger" :icon="Delete" circle @click="handleDelete(scope.row)"></el-button>
+                            <el-button type="danger" :icon="Delete" circle @click="handleDelete(scope.row)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>

@@ -26,15 +26,7 @@
 </template>
 
 <script setup>
-// import { useStore } from 'vuex';
-// import { computed, ref } from 'vue';
-// import CryptoJS from 'crypto-js';
-// import * as validator from 'validator';
 import {getAdmin,postAdminToken} from '@/api/adminApi';
-// import { setAccessToken, setRefreshToken } from "@/api/auth";
-
-
-
 
 import { useStore } from 'vuex';
 import { computed, onMounted, ref } from 'vue';
@@ -92,6 +84,7 @@ async function login() {
         }
       }
     } else {
+      messageLogin.value = response.data.error;
       console.log(response.data.error);
     }
   }
